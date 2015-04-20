@@ -1,6 +1,6 @@
 # Usecase
 
-TODO: Write a gem description
+Simple abstract usecases, with complete freedom on final state.
 
 ## Installation
 
@@ -20,7 +20,51 @@ Or install it yourself as:
 
 ## Usage
 
-TODO: Write usage instructions here
+Example
+
+```rb
+Class FlipCoin < Usecase::Interactor
+  def initialize(context)
+    @context = context,
+  end
+
+  attr_reader :context
+
+  def available_outcomes
+    [:heads, :tails]
+  end
+
+  def run!
+    report_tails if rand 2
+    send_admin_report
+    report_heads if rand 2
+  end
+
+  def send_admin_report
+    context.admin_mailer.flipped_heads
+  end
+end
+
+filp = FlipCoin.new(self)
+
+filp.outcome
+# => :heads
+
+flip.results
+# => []
+
+flip.heads?
+# => true
+
+flip.consequence
+# => [:heads]
+
+flip.on_heads do
+  puts "Hooray"
+end
+```
+
+establish, deduce, ascertain, settle, evaluate
 
 ## Contributing
 
