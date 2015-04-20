@@ -48,6 +48,8 @@ module Usecase
       interactor = interactor_klass.new true
       assert_equal false, interactor.failure?
     end
+
+    # TODO test blocks
   end
 
 end
