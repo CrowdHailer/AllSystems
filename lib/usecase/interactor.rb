@@ -14,8 +14,7 @@ module Usecase
       end
     end
 
-    def report(status, *output)
-      result = [status, *output]
+    def report(*result)
       throw :report, result
     end
 
