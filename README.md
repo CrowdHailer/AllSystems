@@ -25,7 +25,7 @@ Example
 ```rb
 Class FlipCoin < Usecase::Interactor
   def initialize(context)
-    @context = context,
+    @context = context
   end
 
   attr_reader :context
@@ -64,6 +64,83 @@ flip.on_heads do
 end
 ```
 
+Example 2
+
+```rb
+class Customer
+  # One of several customer actions
+  class PasswordReset < Usecase::Interactor
+    def initialize(context, id, params)
+      @context = context
+      @id = id
+      @params = params
+    end
+
+    attr_reader :context, :id, :params
+
+    def available_outcomes
+      [:succeded, :account_unknown, :user_unknown, :not_permitted, :invalid_details]
+    end
+
+    def run!
+      report_account_unknown id, unless account
+      report_user_unknown if authority.guest?
+      report_not_permitted unless authority == account || authority.admin?
+      report_invalid_details form unless form.valid?
+      account.password = form.password
+      account.save
+      send_email
+      report_succeeded account
+    end
+
+    def send_email
+      context.customer_mailer.password_reset
+    end
+
+    def form
+      @form ||= Form.new params
+    end
+
+    def account
+      @account ||= Customers[id]
+    end
+
+    def authority
+      @authority ||= context.current_user
+    end
+
+  end
+end
+
+# use in controller
+
+  reset = Customer::Password.new(self, 1, request.POST['customer'])
+
+  reset.succeeded do |customer| # 204: No Content
+    flash['success'] = 'Password update successful'
+    redirect customer_page(customer), 204
+  end
+
+  reset.unknown_account do |id| # 404: Not found
+    flash['error'] = "account: #{id} not found"
+    redirect customers_page, 404
+  end
+
+  reset.unknow_user do # 401: Unauthenticated
+    flash['error'] = 'Login required'
+    redirect login_page, 401
+  end
+
+  reset.not_permitted do # 403: Forbidden
+    flash['error'] = 'Not authorized'
+    redirect customer_page, 403
+  end
+
+  reset.invalid_details do |form| # 400: bad request
+    status = 400
+    render :new, :locals => {:form => form}
+  end
+```
 establish, deduce, ascertain, settle, evaluate
 
 ## Contributing
