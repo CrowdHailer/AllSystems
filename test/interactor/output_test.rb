@@ -30,14 +30,44 @@ module Usecase
       assert_equal [], interactor.output
     end
 
+    def test_callback_recives_no_output
+      interactor = interactor_klass.new 0
+      mock = MiniTest::Mock.new
+      mock.expect :report, true, []
+      interactor.none do |*args|
+        mock.report *args
+      end
+      mock.verify
+    end
+
     def test_single_item_output
       interactor = interactor_klass.new 1
       assert_equal [1], interactor.output
     end
 
+    def test_callback_recives_single_output
+      interactor = interactor_klass.new 1
+      mock = MiniTest::Mock.new
+      mock.expect :report, true, [1]
+      interactor.one do |*args|
+        mock.report *args
+      end
+      mock.verify
+    end
+
     def test_two_item_output
       interactor = interactor_klass.new 2
       assert_equal [1, 2], interactor.output
+    end
+
+    def test_callback_recives_double_output
+      interactor = interactor_klass.new 2
+      mock = MiniTest::Mock.new
+      mock.expect :report, true, [1, 2]
+      interactor.two do |*args|
+        mock.report *args
+      end
+      mock.verify
     end
   end
 end

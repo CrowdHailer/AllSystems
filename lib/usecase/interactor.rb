@@ -28,6 +28,18 @@ module Usecase
       yield if failure?
     end
 
+    def none
+      yield if outcome == :none
+    end
+
+    def one
+      yield *output if outcome == :one
+    end
+
+    def two
+      yield *output if outcome == :two
+    end
+
     def success?
       outcome == :success
     end
