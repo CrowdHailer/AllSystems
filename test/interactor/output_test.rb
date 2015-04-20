@@ -29,5 +29,15 @@ module Usecase
       interactor = interactor_klass.new 0
       assert_equal [], interactor.output
     end
+
+    def test_single_item_output
+      interactor = interactor_klass.new 1
+      assert_equal [1], interactor.output
+    end
+
+    def test_two_item_output
+      interactor = interactor_klass.new 2
+      assert_equal [1, 2], interactor.output
+    end
   end
 end
