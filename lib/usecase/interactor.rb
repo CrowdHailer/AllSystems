@@ -6,10 +6,15 @@ module Usecase
       end
     end
 
+    def output
+      []
+    end
+
     def report(status)
       throw :report, status
     end
 
+    # TODO custom define methods
     def success?
       outcome == :success
     end

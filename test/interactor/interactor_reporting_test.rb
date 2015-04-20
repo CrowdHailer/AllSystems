@@ -2,6 +2,7 @@ require_relative '../test_config'
 
 module Usecase
   class InteractorReportingTest < MiniTest::Test
+    # TODO outcome testing
     def interactor_klass
       @interactor_klass ||= Class.new(Usecase::Interactor) do
         def initialize(pass)
