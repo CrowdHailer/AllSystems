@@ -50,7 +50,39 @@ module Usecase
       assert_equal false, interactor.failure?
     end
 
-    # TODO test blocks
+    def test_calls_success_action_for_pass
+      interactor = interactor_klass.new true
+      mock = MiniTest::Mock.new
+      mock.expect :report, true
+      interactor.success do
+        mock.report
+      end
+      mock.verify
+    end
+
+    def test_doesnt_call_success_for_no_pass
+      interactor = interactor_klass.new false
+      interactor.success do
+        flunk 'Should not be a success'
+      end
+    end
+
+    def test_calls_failure_action_for_no_pass
+      interactor = interactor_klass.new false
+      mock = MiniTest::Mock.new
+      mock.expect :report, true
+      interactor.failure do
+        mock.report
+      end
+      mock.verify
+    end
+
+    def test_doesnt_call_failure_for_pass
+      interactor = interactor_klass.new true
+      interactor.failure do
+        flunk 'Should not be a failure'
+      end
+    end
   end
 
 end

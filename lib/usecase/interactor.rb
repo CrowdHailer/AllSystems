@@ -20,6 +20,14 @@ module Usecase
     end
 
     # TODO custom define methods
+    def success
+      yield if success?
+    end
+
+    def failure
+      yield if failure?
+    end
+
     def success?
       outcome == :success
     end
