@@ -50,6 +50,7 @@ filp = FlipCoin.new(self)
 filp.outcome
 # => :heads
 
+# output?
 flip.results
 # => []
 
