@@ -30,6 +30,10 @@ create_user.on :success do |user|
 end
 ```
 
+### why?
+
+Such a simple class that a library is almost not needed. I have found its value not in reduced work when making my specific interactors but in reduced testing for those interactor. Don't need to test things like single execution and predicate methods on specific interactors
+
 ### Question 1: What should the predicate method be called?
 a) was?
 ```rb
@@ -62,10 +66,6 @@ create_user.email_taken?
 create_user.emai_taken? #probably want this to throw error
 # => false
 ```
-
-### why?
-
-Such a simple class that a library is almost not needed. I have found its value not in reduced work when making my specific interactors but in reduced testing for those interactor. Don't need to test things like single execution and predicate methods on specific interactors
 
 ## Installation
 
