@@ -11,6 +11,25 @@ outcome, *output = result
 
 Results are reported within the `run!` method of the interactor.
 
+```rb
+def run!
+  new_user = {:name => 'John Smith'}
+  report :success, new_user
+end
+
+# result = [:success, new_user]
+# outcome = :success
+# output = [new_user]
+```
+
+The interactor can then be used to set responses to the results
+
+```rb
+create_user.on :success do |user|
+  puts "Hello #{user[:name]}"
+end
+```
+
 ### why?
 
 Such a simple class that a library is almost not needed. I have found its value not in reduced work when making my specific interactors but in reduced testing for those interactor. Don't need to test things like single execution and predicate methods on specific interactors
@@ -42,8 +61,8 @@ Class FlipCoin < Usecase::Interactor
   end
 
   def run!
-    report_tails if rand 2
-    report_heads if rand 2
+    report_tails if [true, false].sample
+    report_heads
   end
 end
 
