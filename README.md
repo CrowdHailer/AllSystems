@@ -30,6 +30,39 @@ create_user.on :success do |user|
 end
 ```
 
+### Question 1: What should the predicate method be called?
+a) was?
+```rb
+create_user.was? :success
+# => true
+```
+seams a bit odd to try and force the english as any outcome can be reported
+```rb
+create_user.was? :email_taken
+```
+b) outcome?
+less nice in some cases
+```rb
+create_user.outcome? :success
+# => true
+```
+but never sounds silly
+```rb
+create_user.outcome? :email_taken
+```
+c) outcome name
+```rb
+create_user.success?
+# => true
+```
+Shortest solution but requires responding false to unknwn methods and not with a no method error, unless the interactor has a defined set of outcomes
+```rb
+create_user.email_taken?
+# => true
+create_user.emai_taken? #probably want this to throw error
+# => false
+```
+
 ### why?
 
 Such a simple class that a library is almost not needed. I have found its value not in reduced work when making my specific interactors but in reduced testing for those interactor. Don't need to test things like single execution and predicate methods on specific interactors
