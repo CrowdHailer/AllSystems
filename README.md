@@ -67,6 +67,30 @@ create_user.emai_taken? #probably want this to throw error
 # => false
 ```
 
+### Question 2: What should the action method be called?
+This method yields to the block if it represents the current interactor outcome
+a) on
+```rb
+create_user.on :success do |user|
+  puts "Hello #{user[:name]}"
+end
+```
+Can raise error to unknown outcome if given symbol not in declared outcomes
+b) outcome
+```rb
+create_user.outcome :success do |user|
+  puts "Hello #{user[:name]}"
+end
+```
+Overloads outcome method. different behaviour if given symbol vs not. given symbol acts as comand not given symbol acts as query
+c) outcome name
+```rb
+create_user.success do |user|
+  puts "Hello #{user[:name]}"
+end
+```
+requires declared outcomes or all methods with be handled
+
 ## Installation
 
 Add this line to your application's Gemfile:
