@@ -48,12 +48,16 @@ module Usecase
       case method_symbol
       when *outcomes
         return on method_symbol, &block
-      end
-      if capture = method_symbol[/([^?]+)\?/, 1]
-        outcome? capture.to_sym
+      when /([^?]+)\?/
+        outcome? $1.to_sym
       else
         super
       end
+      # if capture = method_symbol[/([^?]+)\?/, 1]
+      #   outcome? capture.to_sym
+      # else
+      #   super
+      # end
     end
   end
 end
