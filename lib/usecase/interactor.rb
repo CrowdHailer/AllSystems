@@ -39,9 +39,9 @@ module Usecase
 
     def method_missing(method_symbol, *args, &block)
       if capture = method_symbol[/([^?]+)\?/, 1]
-        capture.to_sym == outcome
+        outcome? capture.to_sym
       else
-        yield *output if method_symbol == outcome
+        yield *output if outcome? method_symbol
       end
     end
   end
