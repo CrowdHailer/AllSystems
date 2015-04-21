@@ -24,24 +24,13 @@ Example
 
 ```rb
 Class FlipCoin < Usecase::Interactor
-  def initialize(context)
-    @context = context
-  end
-
-  attr_reader :context
-
   def available_outcomes
     [:heads, :tails]
   end
 
   def run!
     report_tails if rand 2
-    send_admin_report
     report_heads if rand 2
-  end
-
-  def send_admin_report
-    context.admin_mailer.flipped_heads
   end
 end
 
