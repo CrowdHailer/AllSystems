@@ -33,8 +33,6 @@ module Usecase
       throw :report, result
     end
 
-    public
-
     def method_missing(method_symbol, *args, &block)
       if capture = method_symbol[/([^?]+)\?/, 1]
         capture.to_sym == outcome
