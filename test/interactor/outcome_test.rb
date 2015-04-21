@@ -69,6 +69,27 @@ module Usecase
       mock.verify
     end
 
+    # TODO decide
+    # def test_calls_on_either_action_for_pass
+    #   interactor = interactor_klass.new true
+    #   mock = MiniTest::Mock.new
+    #   mock.expect :report, true
+    #   interactor.on :success, :failue do
+    #     mock.report
+    #   end
+    #   mock.verify
+    # end
+    #
+    # def test_calls_on_either_action_for_no_pass
+    #   interactor = interactor_klass.new false
+    #   mock = MiniTest::Mock.new
+    #   mock.expect :report, true
+    #   interactor.on :success, :failure do
+    #     mock.report
+    #   end
+    #   mock.verify
+    # end
+
     def test_doesnt_call_on_success_action_for_no_pass
       interactor = interactor_klass.new false
       interactor.on :success do
