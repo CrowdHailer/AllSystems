@@ -149,7 +149,6 @@ establish, deduce, ascertain, settle, evaluate
 2. `report_outcome` as method
 3. Error for unknown callback *maybe declaring callbacks not necessary*
 4. Error for reporting unknown outcome *maybe declaring callbacks not necessary*
-6. Single execution of run method
 7. inheritance of available callbacks *maybe declaring callbacks not necessary*
 8. actions on class passed to instance *possible to declare action before use*
 
