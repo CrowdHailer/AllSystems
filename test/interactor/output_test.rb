@@ -8,7 +8,7 @@ module Usecase
           @value = value
         end
 
-        def available_outcome
+        def outcomes
           [:none, :one, :two, :unique]
         end
 

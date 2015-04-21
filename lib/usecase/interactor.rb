@@ -13,6 +13,7 @@ module Usecase
     end
 
     def outcome?(predicate)
+      raise UnknownOutcomeError unless outcomes.include? predicate
       predicate == outcome
     end
 
@@ -38,10 +39,12 @@ module Usecase
     end
 
     def report(*result)
+      raise UnknownOutcomeReportError unless outcomes.include? result.first
       throw :report, result
     end
 
     def method_missing(method_symbol, *args, &block)
+      # super
       if capture = method_symbol[/([^?]+)\?/, 1]
         outcome? capture.to_sym
       else

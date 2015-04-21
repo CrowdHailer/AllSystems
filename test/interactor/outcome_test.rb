@@ -8,7 +8,7 @@ module Usecase
           @pass = pass
         end
 
-        def available_outcome
+        def outcomes
           [:success, :failure]
         end
 
