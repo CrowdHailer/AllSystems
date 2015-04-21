@@ -1,7 +1,4 @@
 module Usecase
-  AbstractMethodError = Class.new(StandardError)
-  NoOutcomeError = Class.new(StandardError)
-
   class Interactor
     def run!
       raise AbstractMethodError, "please define #{__method__} for #{name}"

@@ -1,4 +1,5 @@
 require "usecase/version"
+require "usecase/errors"
 require "usecase/interactor"
 
 module Usecase
