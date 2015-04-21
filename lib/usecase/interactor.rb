@@ -53,11 +53,6 @@ module Usecase
       else
         super
       end
-      # if capture = method_symbol[/([^?]+)\?/, 1]
-      #   outcome? capture.to_sym
-      # else
-      #   super
-      # end
     end
   end
 end
