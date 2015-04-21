@@ -12,6 +12,10 @@ module Usecase
       result.first
     end
 
+    def outcome?(predicate)
+      predicate == outcome
+    end
+
     def output
       result.drop 1
     end

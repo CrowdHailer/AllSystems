@@ -29,6 +29,16 @@ module Usecase
       assert_equal :failure, interactor.outcome
     end
 
+    def test_confirms_outcome_success_for_pass
+      interactor = interactor_klass.new true
+      assert_equal true, interactor.outcome?(:success)
+    end
+
+    def test_denys_outcome_success_for_no_pass
+      interactor = interactor_klass.new false
+      assert_equal false, interactor.outcome?(:success)
+    end
+
     def test_success_query_is_true_for_pass
       interactor = interactor_klass.new true
       assert_equal true, interactor.success?
