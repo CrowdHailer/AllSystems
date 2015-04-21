@@ -9,7 +9,7 @@ module Usecase
         end
 
         def available_outcome
-          [:none, :one, :two]
+          [:none, :one, :two, :unique]
         end
 
         def run!
@@ -20,6 +20,8 @@ module Usecase
             report :one, 1
           when 2
             report :two, 1, 2
+          when :unique
+            report :unique, Class.new
           end
         end
       end
@@ -68,6 +70,11 @@ module Usecase
         mock.report *args
       end
       mock.verify
+    end
+
+    def test_run_is_only_executed_once
+      interactor = interactor_klass.new :unique
+      assert_equal interactor.output.first, interactor.output.first
     end
   end
 end

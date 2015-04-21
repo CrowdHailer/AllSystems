@@ -17,7 +17,7 @@ module Usecase
     end
 
     def result
-      catch(:report) do
+      @result ||= catch(:report) do
         run!
         raise NoOutcomeError, "#{name} concluded without reporting an outcome"
       end
