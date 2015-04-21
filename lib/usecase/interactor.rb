@@ -4,6 +4,11 @@ module Usecase
       raise AbstractMethodError, "please define #{__method__} for #{name}"
     end
 
+    def outcomes
+      # TODO throw error on abstract
+      []
+    end
+
     def name
       self.class.name || 'Anonymous Interactor'
     end

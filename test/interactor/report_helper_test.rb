@@ -33,5 +33,32 @@ module Usecase
       interactor = interactor_klass.new false
       assert_equal :failure, interactor.outcome
     end
+    class Undefined < Usecase::Interactor
+      def outcomes
+        []
+      end
+
+      def run!
+        report_created
+      end
+    end
+
+    def test_handles_undefined_outcomes
+      assert_raises Usecase::UnknownOutcomeReportError do
+        Undefined.new().outcome
+      end
+    end
+
+    class Nonedefined < Usecase::Interactor
+      def run!
+        report_created
+      end
+    end
+
+    def test_handles_nonedefined_outcomes
+      assert_raises Usecase::UnknownOutcomeReportError do
+        Nonedefined.new().outcome
+      end
+    end
   end
 end
