@@ -45,10 +45,14 @@ module Usecase
 
     def method_missing(method_symbol, *args, &block)
       # super
+      case method_symbol
+      when *outcomes
+        return on method_symbol, &block
+      end
       if capture = method_symbol[/([^?]+)\?/, 1]
         outcome? capture.to_sym
       else
-        on method_symbol, &block
+        super
       end
     end
   end
