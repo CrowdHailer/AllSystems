@@ -1,5 +1,12 @@
 module Usecase
+  AbstractMethodError = Class.new(StandardError)
+  NoOutcomeError = Class.new(StandardError)
+
   class Interactor
+    def run!
+      raise AbstractMethodError, "please define #{__method__} for #{self.class.name}"
+    end
+
     def outcome
       result.first
     end
@@ -11,6 +18,7 @@ module Usecase
     def result
       catch(:report) do
         run!
+        raise NoOutcomeError, "#{self.class.name} concluded without reporting an outcome"
       end
     end
 
