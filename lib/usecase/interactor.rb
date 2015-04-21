@@ -35,34 +35,12 @@ module Usecase
 
     public
 
-    # TODO custom define methods
-    def success
-      yield if success?
+    def method_missing(method_symbol, *args, &block)
+      if capture = method_symbol[/([^?]+)\?/, 1]
+        capture.to_sym == outcome
+      else
+        yield *output if method_symbol == outcome
+      end
     end
-
-    def failure
-      yield if failure?
-    end
-
-    def none
-      yield if outcome == :none
-    end
-
-    def one
-      yield *output if outcome == :one
-    end
-
-    def two
-      yield *output if outcome == :two
-    end
-
-    def success?
-      outcome == :success
-    end
-
-    def failure?
-      outcome == :failure
-    end
-
   end
 end
