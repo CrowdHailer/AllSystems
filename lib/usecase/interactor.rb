@@ -44,11 +44,11 @@ module Usecase
     end
 
     def method_missing(method_symbol, *args, &block)
-      # super
       case method_symbol
       when *outcomes
         return on method_symbol, &block
       when /([^?]+)\?/
+        super unless outcomes.include? $1.to_sym
         outcome? $1.to_sym
       else
         super

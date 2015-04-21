@@ -50,5 +50,14 @@ module Usecase
         end
       end
     end
+
+    def test_no_method_error_for_invalid_outcome_queries
+      interactor = interactor_klass.new true
+      assert_raises NoMethodError do
+        interactor.random? do
+          flunk
+        end
+      end
+    end
   end
 end
