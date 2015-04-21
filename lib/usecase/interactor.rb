@@ -4,7 +4,11 @@ module Usecase
 
   class Interactor
     def run!
-      raise AbstractMethodError, "please define #{__method__} for #{self.class.name}"
+      raise AbstractMethodError, "please define #{__method__} for #{name}"
+    end
+
+    def name
+      self.class.name || 'Anonymous Interactor'
     end
 
     def outcome
@@ -18,7 +22,7 @@ module Usecase
     def result
       catch(:report) do
         run!
-        raise NoOutcomeError, "#{self.class.name} concluded without reporting an outcome"
+        raise NoOutcomeError, "#{name} concluded without reporting an outcome"
       end
     end
 

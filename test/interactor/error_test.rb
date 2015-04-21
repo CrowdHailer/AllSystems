@@ -23,5 +23,13 @@ module Usecase
       end
       assert_includes err.message, 'NoOutcomeInteractor'
     end
+
+    def test_raises_correct_error_for_unnamed_interactor
+      interactor = Class.new(Usecase::Interactor).new
+      err = assert_raises AbstractMethodError do
+        interactor.outcome
+      end
+      assert_includes err.message, 'Anonymous Interactor'
+    end
   end
 end
