@@ -16,16 +16,24 @@ module Usecase
       result.drop 1
     end
 
-    def result
-      @result ||= catch(:report) do
+    private
+
+    def run
+      catch(:report) do
         run!
         raise NoOutcomeError, "#{name} concluded without reporting an outcome"
       end
     end
 
+    def result
+      @result ||= run
+    end
+
     def report(*result)
       throw :report, result
     end
+
+    public
 
     # TODO custom define methods
     def success
