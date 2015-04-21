@@ -1,6 +1,19 @@
 # Usecase
 
-Simple abstract usecases, with complete freedom on final state.
+**Simple usecases/interactors, main interactor class currently only 45 lines.**
+
+### Overview
+An interactor encapsulates a specific buisness interaction, often a user interaction, such as `LogIn` or `CreatePost`. Each interactor runs once only to produce a single result that consists of an outcome and output. The outcome is a single :symbol and the output an optional array of values. The result can be decomposed into outcome and output as follows.
+
+```rb
+outcome, *output = result
+```
+
+Results are reported within the `run!` method of the interactor.
+
+### why?
+
+Such a simple class that a library is almost not needed. I have found its value not in reduced work when making my specific interactors but in reduced testing for those interactor. Don't need to test things like single execution and predicate methods on specific interactors
 
 ## Installation
 
