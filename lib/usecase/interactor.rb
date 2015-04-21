@@ -16,7 +16,7 @@ module Usecase
     end
 
     def output
-      result[1..-1]
+      result.drop 1
     end
 
     def result
