@@ -59,6 +59,23 @@ module Usecase
       assert_equal false, interactor.failure?
     end
 
+    def test_calls_on_success_action_for_pass
+      interactor = interactor_klass.new true
+      mock = MiniTest::Mock.new
+      mock.expect :report, true
+      interactor.on :success do
+        mock.report
+      end
+      mock.verify
+    end
+
+    def test_doesnt_call_on_success_action_for_no_pass
+      interactor = interactor_klass.new false
+      interactor.on :success do
+        flunk 'Should not process'
+      end
+    end
+
     def test_calls_success_action_for_pass
       interactor = interactor_klass.new true
       mock = MiniTest::Mock.new

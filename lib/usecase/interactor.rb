@@ -20,6 +20,10 @@ module Usecase
       result.drop 1
     end
 
+    def on(conditional_outcome)
+      yield *output if outcome? conditional_outcome
+    end
+
     private
 
     def run
@@ -41,7 +45,7 @@ module Usecase
       if capture = method_symbol[/([^?]+)\?/, 1]
         outcome? capture.to_sym
       else
-        yield *output if outcome? method_symbol
+        on method_symbol, &block
       end
     end
   end
