@@ -47,6 +47,8 @@ module Usecase
       case method_symbol
       when *outcomes
         return on method_symbol, &block
+      when /report_([^?]+)/
+        report $1.to_sym, *args
       when /([^?]+)\?/
         super unless outcomes.include? $1.to_sym
         outcome? $1.to_sym
