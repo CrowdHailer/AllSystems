@@ -173,11 +173,6 @@ end
 establish, deduce, ascertain, settle, evaluate
 
 ## Upcoming
-1. Generalize callback and query methods
-2. `report_outcome` as method
-3. Error for unknown callback *maybe declaring callbacks not necessary*
-4. Error for reporting unknown outcome *maybe declaring callbacks not necessary*
-7. inheritance of available callbacks *maybe declaring callbacks not necessary*
 8. actions on class passed to instance *possible to declare action before use*
 
 ## Contributing
