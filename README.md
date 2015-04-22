@@ -180,6 +180,54 @@ end
 ```
 establish, deduce, ascertain, settle, evaluate
 
+## Docs
+
+**#run!** `interactor.run! => raise AbstractMethodError`
+
+Abstract method that will always raise an error. Should be over written in for specific interactors
+
+**#outcomes** `interactor.outcomes => []`
+
+Should be over written in for specific interactors to return list of possible outcomes
+
+**#name** `interactor.name => class_name`
+
+Returns the name of the class or Anonymous if class not set to constant
+
+**(private)#report** `interactor.report(outcome, *output) => terminate with result`
+
+Use within the interactor to report that an outcome state has been reached with optional output. Terminates execution of run!
+
+**#outcome** `interactor.outcome => symbol`
+
+Returns the outcome of running the interactor
+
+**#outcome?(outcome)** `interactor.outcome?(outcome) => boolean`
+
+Does the outcome match the predicate outcome.
+
+**#output** `interactor.output => [*output]`
+
+Returns an array of output from running the interactor
+
+**#on(:outcome)** `interactor.on(:outcome, &block) => block return value`
+
+If the interactors out come was the same as given here then the output is yielded to the block, else no action.
+
+
+**#&lt;outcome&gt;?** `interactor.<outcome>? => boolean`
+
+Was the outcome equal to the method name, raises error if method name not one of possible outcomes
+
+**#&lt;outcome&gt;** `interactor.<outcome> &block => block_return_value`
+
+Yields output to block if outcome equal to method name, raises error if method name not one of possible outcomes
+
+**#report_&lt;outcome&gt;** `interactor.report_<outcome>(*output) => terminate with result`
+
+Use within the interactor to report that an outcome state has been reached with optional output. Terminates execution of run!
+
+
 ## Upcoming
 8. actions on class passed to instance *possible to declare action before use*
 
