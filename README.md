@@ -59,11 +59,11 @@ Or install it yourself as:
 
 ## Usage
 
-Example
+### Example 1 *Flipping a coin*
 
 ```rb
 Class FlipCoin < Usecase::Interactor
-  def available_outcomes
+  def outcomes
     [:heads, :tails]
   end
 
@@ -73,22 +73,27 @@ Class FlipCoin < Usecase::Interactor
   end
 end
 
-filp = FlipCoin.new(self)
+filp = FlipCoin.new
+
+flip.result
+# => [:heads]
 
 filp.outcome
 # => :heads
 
-# output?
-flip.results
+flip.output?
 # => []
 
 flip.heads?
 # => true
 
-flip.consequence
-# => [:heads]
+flip.tails?
+# => false
 
-flip.on_heads do
+flip.other?
+# raise UnknownMethodError
+
+flip.heads do
   puts "Hooray"
 end
 ```
