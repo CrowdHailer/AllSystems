@@ -112,7 +112,7 @@ class Customer
 
     attr_reader :context, :id, :params
 
-    def available_outcomes
+    def outcomes
       [:succeded, :account_unknown, :user_unknown, :not_permitted, :invalid_details]
     end
 
@@ -147,33 +147,36 @@ class Customer
 end
 
 # use in controller
+class CustomerController
+  def password_reset(id)
+    reset = Customer::Password.new(self, id, request.POST['customer'])
 
-  reset = Customer::Password.new(self, 1, request.POST['customer'])
+    reset.succeeded do |customer| # 204: No Content
+      flash['success'] = 'Password update successful'
+      redirect customer_page(customer), 204
+    end
 
-  reset.succeeded do |customer| # 204: No Content
-    flash['success'] = 'Password update successful'
-    redirect customer_page(customer), 204
+    reset.unknown_account do |id| # 404: Not found
+      flash['error'] = "account: #{id} not found"
+      redirect customers_page, 404
+    end
+
+    reset.unknow_user do # 401: Unauthenticated
+      flash['error'] = 'Login required'
+      redirect login_page, 401
+    end
+
+    reset.not_permitted do # 403: Forbidden
+      flash['error'] = 'Not authorized'
+      redirect customer_page, 403
+    end
+
+    reset.invalid_details do |form| # 400: bad request
+      status = 400
+      render :new, :locals => {:form => form}
+    end
   end
-
-  reset.unknown_account do |id| # 404: Not found
-    flash['error'] = "account: #{id} not found"
-    redirect customers_page, 404
-  end
-
-  reset.unknow_user do # 401: Unauthenticated
-    flash['error'] = 'Login required'
-    redirect login_page, 401
-  end
-
-  reset.not_permitted do # 403: Forbidden
-    flash['error'] = 'Not authorized'
-    redirect customer_page, 403
-  end
-
-  reset.invalid_details do |form| # 400: bad request
-    status = 400
-    render :new, :locals => {:form => form}
-  end
+end
 ```
 establish, deduce, ascertain, settle, evaluate
 
