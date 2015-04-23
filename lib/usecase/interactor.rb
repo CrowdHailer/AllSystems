@@ -4,16 +4,30 @@ module Usecase
       raise AbstractMethodError, "please define #{__method__} for #{name}"
     end
 
+    def outcomes
+      # TODO throw error on abstract
+      []
+    end
+
     def name
-      self.class.name || 'Anonymous Interactor'
+      self.class.name || 'Anonymous'
     end
 
     def outcome
       result.first
     end
 
+    def outcome?(predicate)
+      raise UnknownOutcomeError unless outcomes.include? predicate
+      predicate == outcome
+    end
+
     def output
       result.drop 1
+    end
+
+    def on(conditional_outcome)
+      yield *output if outcome? conditional_outcome
     end
 
     private
@@ -30,14 +44,21 @@ module Usecase
     end
 
     def report(*result)
+      raise UnknownOutcomeReportError unless outcomes.include? result.first
       throw :report, result
     end
 
     def method_missing(method_symbol, *args, &block)
-      if capture = method_symbol[/([^?]+)\?/, 1]
-        capture.to_sym == outcome
+      case method_symbol
+      when *outcomes
+        return on method_symbol, &block
+      when /report_([^?]+)/
+        report $1.to_sym, *args
+      when /([^?]+)\?/
+        super unless outcomes.include? $1.to_sym
+        outcome? $1.to_sym
       else
-        yield *output if method_symbol == outcome
+        super
       end
     end
   end

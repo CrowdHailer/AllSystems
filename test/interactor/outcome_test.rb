@@ -8,7 +8,7 @@ module Usecase
           @pass = pass
         end
 
-        def available_outcome
+        def outcomes
           [:success, :failure]
         end
 
@@ -29,6 +29,16 @@ module Usecase
       assert_equal :failure, interactor.outcome
     end
 
+    def test_confirms_outcome_success_for_pass
+      interactor = interactor_klass.new true
+      assert_equal true, interactor.outcome?(:success)
+    end
+
+    def test_denys_outcome_success_for_no_pass
+      interactor = interactor_klass.new false
+      assert_equal false, interactor.outcome?(:success)
+    end
+
     def test_success_query_is_true_for_pass
       interactor = interactor_klass.new true
       assert_equal true, interactor.success?
@@ -47,6 +57,44 @@ module Usecase
     def test_failure_query_is_false_for_pass
       interactor = interactor_klass.new true
       assert_equal false, interactor.failure?
+    end
+
+    def test_calls_on_success_action_for_pass
+      interactor = interactor_klass.new true
+      mock = MiniTest::Mock.new
+      mock.expect :report, true
+      interactor.on :success do
+        mock.report
+      end
+      mock.verify
+    end
+
+    # TODO decide
+    # def test_calls_on_either_action_for_pass
+    #   interactor = interactor_klass.new true
+    #   mock = MiniTest::Mock.new
+    #   mock.expect :report, true
+    #   interactor.on :success, :failue do
+    #     mock.report
+    #   end
+    #   mock.verify
+    # end
+    #
+    # def test_calls_on_either_action_for_no_pass
+    #   interactor = interactor_klass.new false
+    #   mock = MiniTest::Mock.new
+    #   mock.expect :report, true
+    #   interactor.on :success, :failure do
+    #     mock.report
+    #   end
+    #   mock.verify
+    # end
+
+    def test_doesnt_call_on_success_action_for_no_pass
+      interactor = interactor_klass.new false
+      interactor.on :success do
+        flunk 'Should not process'
+      end
     end
 
     def test_calls_success_action_for_pass
