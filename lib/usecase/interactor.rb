@@ -10,7 +10,7 @@ module Usecase
     end
 
     def name
-      self.class.name || 'Anonymous Interactor'
+      self.class.name || 'Anonymous'
     end
 
     def outcome

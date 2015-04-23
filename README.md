@@ -1,31 +1,38 @@
-# Usecase
+# AllSystems
 
-**Simple usecases/interactors, main interactor class currently only 45 lines.**
+**Simple usecases/interactors/service-object to encapsulate buisness logic**
+
+### Well what is it?
+The three terms above are all used at various times to describe the use of a dedicated object separate to the delivery mechanism (read ApplicationController) to coordinate the calls on several domain objects (such as user models). Service object is sometimes used to describe the encapsulation of an external service that you system uses. E.g. you might have a Stripe service object, so I do not use that term. Also usecase seams to make more sense on a non technical level, so the Login Usecase is what the customer does. It is achieved using the Login interactor, the Ruby object. A good starting point is this [article](https://netguru.co/blog/service-objects-in-rails-will-help) as well as the further reading listed. This [article](http://blog.codeclimate.com/blog/2012/10/17/7-ways-to-decompose-fat-activerecord-models/) helps explain there place in the landscape of objeccts beyond MVC  
 
 ### Overview
-An interactor encapsulates a specific buisness interaction, often a user interaction, such as `LogIn` or `CreatePost`. Each interactor runs once only to produce a single result that consists of an outcome and output. The outcome is a single :symbol and the output an optional array of values. The result can be decomposed into outcome and output as follows.
-
-```rb
-outcome, *output = result
-```
+An interactor encapsulates a specific business interaction, often a user interaction, such as `LogIn` or `CreatePost`. The buisness logic is declared by defining a `run!` method. All possible outcomes are stated by defining a outcomes method. Each instance of the interactor executes the `run!` method once only to produce a single result. The result consists of an outcome and optional output. The outcome is a single :symbol to name the result. The output an array of zero or more values.
 
 Results are reported within the `run!` method of the interactor.
 
 ```rb
-def run!
-  new_user = {:name => 'John Smith'}
-  report :success, new_user
+Class WelcomeJohn < Usecase::Interactor
+  def options
+    # Will always succeed
+    [:success]
+  end
+
+  def run!
+    new_user = {:name => 'John Smith'}
+    report :success, new_user
+  end
 end
 
-# result = [:success, new_user]
-# outcome = :success
-# output = [new_user]
+welcome = WelcomeJohn.new
+welcome.result == [:success, new_user]
+welcome.outcome == :success
+welcome.output = [new_user]
 ```
 
-The interactor can then be used to set responses to the results
+The interactor outcome can then be used to decide response
 
 ```rb
-create_user.on :success do |user|
+welcome.on :success do |user|
   puts "Hello #{user[:name]}"
 end
 ```
@@ -33,63 +40,6 @@ end
 ### why?
 
 Such a simple class that a library is almost not needed. I have found its value not in reduced work when making my specific interactors but in reduced testing for those interactor. Don't need to test things like single execution and predicate methods on specific interactors
-
-### Question 1: What should the predicate method be called?
-a) was?
-```rb
-create_user.was? :success
-# => true
-```
-seams a bit odd to try and force the english as any outcome can be reported
-```rb
-create_user.was? :email_taken
-```
-b) outcome?
-less nice in some cases
-```rb
-create_user.outcome? :success
-# => true
-```
-but never sounds silly
-```rb
-create_user.outcome? :email_taken
-```
-c) outcome name
-```rb
-create_user.success?
-# => true
-```
-Shortest solution but requires responding false to unknwn methods and not with a no method error, unless the interactor has a defined set of outcomes
-```rb
-create_user.email_taken?
-# => true
-create_user.emai_taken? #probably want this to throw error
-# => false
-```
-
-### Question 2: What should the action method be called?
-This method yields to the block if it represents the current interactor outcome
-a) on
-```rb
-create_user.on :success do |user|
-  puts "Hello #{user[:name]}"
-end
-```
-Can raise error to unknown outcome if given symbol not in declared outcomes
-b) outcome
-```rb
-create_user.outcome :success do |user|
-  puts "Hello #{user[:name]}"
-end
-```
-Overloads outcome method. different behaviour if given symbol vs not. given symbol acts as comand not given symbol acts as query
-c) outcome name
-```rb
-create_user.success do |user|
-  puts "Hello #{user[:name]}"
-end
-```
-requires declared outcomes or all methods with be handled
 
 ## Installation
 
@@ -109,11 +59,11 @@ Or install it yourself as:
 
 ## Usage
 
-Example
+### Example 1 *Flipping a coin*
 
 ```rb
 Class FlipCoin < Usecase::Interactor
-  def available_outcomes
+  def outcomes
     [:heads, :tails]
   end
 
@@ -123,22 +73,27 @@ Class FlipCoin < Usecase::Interactor
   end
 end
 
-filp = FlipCoin.new(self)
+filp = FlipCoin.new
+
+flip.result
+# => [:heads]
 
 filp.outcome
 # => :heads
 
-# output?
-flip.results
+flip.output?
 # => []
 
 flip.heads?
 # => true
 
-flip.consequence
-# => [:heads]
+flip.tails?
+# => false
 
-flip.on_heads do
+flip.other?
+# raise UnknownMethodError
+
+flip.heads do
   puts "Hooray"
 end
 ```
@@ -157,7 +112,7 @@ class Customer
 
     attr_reader :context, :id, :params
 
-    def available_outcomes
+    def outcomes
       [:succeded, :account_unknown, :user_unknown, :not_permitted, :invalid_details]
     end
 
@@ -192,42 +147,88 @@ class Customer
 end
 
 # use in controller
+class CustomerController
+  def password_reset(id)
+    reset = Customer::Password.new(self, id, request.POST['customer'])
 
-  reset = Customer::Password.new(self, 1, request.POST['customer'])
+    reset.succeeded do |customer| # 204: No Content
+      flash['success'] = 'Password update successful'
+      redirect customer_page(customer), 204
+    end
 
-  reset.succeeded do |customer| # 204: No Content
-    flash['success'] = 'Password update successful'
-    redirect customer_page(customer), 204
+    reset.unknown_account do |id| # 404: Not found
+      flash['error'] = "account: #{id} not found"
+      redirect customers_page, 404
+    end
+
+    reset.unknow_user do # 401: Unauthenticated
+      flash['error'] = 'Login required'
+      redirect login_page, 401
+    end
+
+    reset.not_permitted do # 403: Forbidden
+      flash['error'] = 'Not authorized'
+      redirect customer_page, 403
+    end
+
+    reset.invalid_details do |form| # 400: bad request
+      status = 400
+      render :new, :locals => {:form => form}
+    end
   end
-
-  reset.unknown_account do |id| # 404: Not found
-    flash['error'] = "account: #{id} not found"
-    redirect customers_page, 404
-  end
-
-  reset.unknow_user do # 401: Unauthenticated
-    flash['error'] = 'Login required'
-    redirect login_page, 401
-  end
-
-  reset.not_permitted do # 403: Forbidden
-    flash['error'] = 'Not authorized'
-    redirect customer_page, 403
-  end
-
-  reset.invalid_details do |form| # 400: bad request
-    status = 400
-    render :new, :locals => {:form => form}
-  end
+end
 ```
 establish, deduce, ascertain, settle, evaluate
 
+## Docs
+
+**#run!** `interactor.run! => raise AbstractMethodError`
+
+Abstract method that will always raise an error. Should be over written in for specific interactors
+
+**#outcomes** `interactor.outcomes => []`
+
+Should be over written in for specific interactors to return list of possible outcomes
+
+**#name** `interactor.name => class_name`
+
+Returns the name of the class or Anonymous if class not set to constant
+
+**(private)#report** `interactor.report(outcome, *output) => terminate with result`
+
+Use within the interactor to report that an outcome state has been reached with optional output. Terminates execution of run!
+
+**#outcome** `interactor.outcome => symbol`
+
+Returns the outcome of running the interactor
+
+**#outcome?(outcome)** `interactor.outcome?(outcome) => boolean`
+
+Does the outcome match the predicate outcome.
+
+**#output** `interactor.output => [*output]`
+
+Returns an array of output from running the interactor
+
+**#on(:outcome)** `interactor.on(:outcome, &block) => block return value`
+
+If the interactors out come was the same as given here then the output is yielded to the block, else no action.
+
+
+**#&lt;outcome&gt;?** `interactor.<outcome>? => boolean`
+
+Was the outcome equal to the method name, raises error if method name not one of possible outcomes
+
+**#&lt;outcome&gt;** `interactor.<outcome> &block => block_return_value`
+
+Yields output to block if outcome equal to method name, raises error if method name not one of possible outcomes
+
+**#report_&lt;outcome&gt;** `interactor.report_<outcome>(*output) => terminate with result`
+
+Use within the interactor to report that an outcome state has been reached with optional output. Terminates execution of run!
+
+
 ## Upcoming
-1. Generalize callback and query methods
-2. `report_outcome` as method
-3. Error for unknown callback *maybe declaring callbacks not necessary*
-4. Error for reporting unknown outcome *maybe declaring callbacks not necessary*
-7. inheritance of available callbacks *maybe declaring callbacks not necessary*
 8. actions on class passed to instance *possible to declare action before use*
 
 ## Contributing
