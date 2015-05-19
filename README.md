@@ -1,4 +1,4 @@
-# AllSystems
+# AllSystems [![Gem Version](https://badge.fury.io/rb/all_systems.svg)](http://badge.fury.io/rb/all_systems)
 
 **Simple Ruby usecases/interactors/service-object to encapsulate business logic**
 
