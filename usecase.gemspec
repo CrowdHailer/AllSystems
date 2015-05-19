@@ -8,8 +8,8 @@ Gem::Specification.new do |spec|
   spec.version       = AllSystems::VERSION
   spec.authors       = ["Peter Saxton"]
   spec.email         = ["peterhsaxton@gmail.com"]
-  spec.summary       = %q{TODO: Write a short summary. Required.}
-  spec.description   = %q{TODO: Write a longer description. Optional.}
+  spec.summary       = %q{Simple usecase/interactor/service objects to encapsulate business logic}
+  spec.description   = %q{An interactor encapsulates the action of specific business usecase. For example a `LogIn` or `CreatePost`. It executes this action by coordinating the interaction of over business objects in the system.}
   spec.homepage      = ""
   spec.license       = "MIT"
 
