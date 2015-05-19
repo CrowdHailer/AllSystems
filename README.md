@@ -1,12 +1,12 @@
 # AllSystems
 
-**Simple usecases/interactors/service-object to encapsulate buisness logic**
+**Simple usecases/interactors/service-object to encapsulate business logic**
 
 ### Well what is it?
 The three terms above are all used at various times to describe the use of a dedicated object separate to the delivery mechanism (read ApplicationController) to coordinate the calls on several domain objects (such as user models). Service object is sometimes used to describe the encapsulation of an external service that you system uses. E.g. you might have a Stripe service object, so I do not use that term. Also usecase seams to make more sense on a non technical level, so the Login usecase is what the customer does. It is achieved using the Login interactor, the Ruby object. A good starting point is this [article](https://netguru.co/blog/service-objects-in-rails-will-help) as well as the further reading listed. This [article](http://blog.codeclimate.com/blog/2012/10/17/7-ways-to-decompose-fat-activerecord-models/) helps explain there place in the landscape of objeccts beyond MVC  
 
 ### Overview
-An interactor encapsulates a specific business interaction, often a user interaction, such as `LogIn` or `CreatePost`. The buisness logic is declared by defining a `go!` method. All possible outcomes are stated by defining a outcomes method. Each instance of the interactor executes the `go!` method once only to produce a single result. The result consists of an outcome and optional output. The outcome is a single :symbol to name the result. The output an array of zero or more values.
+An interactor encapsulates a specific business interaction, often a user interaction, such as `LogIn` or `CreatePost`. The business logic is declared by defining a `go!` method. All possible outcomes are stated by defining a outcomes method. Each instance of the interactor executes the `go!` method once only to produce a single result. The result consists of an outcome and optional output. The outcome is a single :symbol to name the result. The output an array of zero or more values.
 
 Results are reported within the `go!` method of the interactor.
 
