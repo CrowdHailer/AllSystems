@@ -1,7 +1,7 @@
-module Usecase
+module AllSystems
   class Interactor
-    def run!
-      raise AbstractMethodError, "please define #{__method__} for #{name}"
+    def go!
+      raise AbstractMethodError, "please define #{__method__} for #{name} interactor"
     end
 
     def outcomes
@@ -32,15 +32,15 @@ module Usecase
 
     private
 
-    def run
+    def go
       catch(:report) do
-        run!
+        go!
         raise NoOutcomeError, "#{name} concluded without reporting an outcome"
       end
     end
 
     def result
-      @result ||= run
+      @result ||= go
     end
 
     def report(*result)

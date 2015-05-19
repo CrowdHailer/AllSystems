@@ -1,9 +1,9 @@
 require_relative '../test_config'
 
-module Usecase
+module AllSystems
   class InteractorReportHelperTest < MiniTest::Test
     def interactor_klass
-      @interactor_klass ||= Class.new(Usecase::Interactor) do
+      @interactor_klass ||= Class.new(AllSystems::Interactor) do
         def initialize(pass)
           @pass = pass
         end
@@ -12,7 +12,7 @@ module Usecase
           [:success, :failure]
         end
 
-        def run!
+        def go!
           report_success :item if @pass
           report_failure
         end
@@ -33,30 +33,30 @@ module Usecase
       interactor = interactor_klass.new false
       assert_equal :failure, interactor.outcome
     end
-    class Undefined < Usecase::Interactor
+    class Undefined < AllSystems::Interactor
       def outcomes
         []
       end
 
-      def run!
+      def go!
         report_created
       end
     end
 
     def test_handles_undefined_outcomes
-      assert_raises Usecase::UnknownOutcomeReportError do
+      assert_raises AllSystems::UnknownOutcomeReportError do
         Undefined.new().outcome
       end
     end
 
-    class Nonedefined < Usecase::Interactor
-      def run!
+    class Nonedefined < AllSystems::Interactor
+      def go!
         report_created
       end
     end
 
     def test_handles_nonedefined_outcomes
-      assert_raises Usecase::UnknownOutcomeReportError do
+      assert_raises AllSystems::UnknownOutcomeReportError do
         Nonedefined.new().outcome
       end
     end

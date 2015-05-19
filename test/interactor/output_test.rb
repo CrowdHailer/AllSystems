@@ -1,9 +1,9 @@
 require_relative '../test_config'
 
-module Usecase
+module AllSystems
   class InteractorOutputTest < MiniTest::Test
     def interactor_klass
-      @interactor_klass ||= Class.new(Usecase::Interactor) do
+      @interactor_klass ||= Class.new(AllSystems::Interactor) do
         def initialize(value)
           @value = value
         end
@@ -12,7 +12,7 @@ module Usecase
           [:none, :one, :two, :unique]
         end
 
-        def run!
+        def go!
           case @value
           when 0
             report :none
@@ -72,7 +72,7 @@ module Usecase
       mock.verify
     end
 
-    def test_run_is_only_executed_once
+    def test_go_is_only_executed_once
       interactor = interactor_klass.new :unique
       assert_equal interactor.output.first, interactor.output.first
     end

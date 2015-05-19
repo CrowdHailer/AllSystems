@@ -3,21 +3,21 @@
 **Simple usecases/interactors/service-object to encapsulate buisness logic**
 
 ### Well what is it?
-The three terms above are all used at various times to describe the use of a dedicated object separate to the delivery mechanism (read ApplicationController) to coordinate the calls on several domain objects (such as user models). Service object is sometimes used to describe the encapsulation of an external service that you system uses. E.g. you might have a Stripe service object, so I do not use that term. Also usecase seams to make more sense on a non technical level, so the Login Usecase is what the customer does. It is achieved using the Login interactor, the Ruby object. A good starting point is this [article](https://netguru.co/blog/service-objects-in-rails-will-help) as well as the further reading listed. This [article](http://blog.codeclimate.com/blog/2012/10/17/7-ways-to-decompose-fat-activerecord-models/) helps explain there place in the landscape of objeccts beyond MVC  
+The three terms above are all used at various times to describe the use of a dedicated object separate to the delivery mechanism (read ApplicationController) to coordinate the calls on several domain objects (such as user models). Service object is sometimes used to describe the encapsulation of an external service that you system uses. E.g. you might have a Stripe service object, so I do not use that term. Also usecase seams to make more sense on a non technical level, so the Login usecase is what the customer does. It is achieved using the Login interactor, the Ruby object. A good starting point is this [article](https://netguru.co/blog/service-objects-in-rails-will-help) as well as the further reading listed. This [article](http://blog.codeclimate.com/blog/2012/10/17/7-ways-to-decompose-fat-activerecord-models/) helps explain there place in the landscape of objeccts beyond MVC  
 
 ### Overview
-An interactor encapsulates a specific business interaction, often a user interaction, such as `LogIn` or `CreatePost`. The buisness logic is declared by defining a `run!` method. All possible outcomes are stated by defining a outcomes method. Each instance of the interactor executes the `run!` method once only to produce a single result. The result consists of an outcome and optional output. The outcome is a single :symbol to name the result. The output an array of zero or more values.
+An interactor encapsulates a specific business interaction, often a user interaction, such as `LogIn` or `CreatePost`. The buisness logic is declared by defining a `go!` method. All possible outcomes are stated by defining a outcomes method. Each instance of the interactor executes the `go!` method once only to produce a single result. The result consists of an outcome and optional output. The outcome is a single :symbol to name the result. The output an array of zero or more values.
 
-Results are reported within the `run!` method of the interactor.
+Results are reported within the `go!` method of the interactor.
 
 ```rb
-Class WelcomeJohn < Usecase::Interactor
+Class WelcomeJohn < AllSystems::Interactor
   def options
     # Will always succeed
     [:success]
   end
 
-  def run!
+  def go!
     new_user = {:name => 'John Smith'}
     report :success, new_user
   end
@@ -62,12 +62,12 @@ Or install it yourself as:
 ### Example 1 *Flipping a coin*
 
 ```rb
-Class FlipCoin < Usecase::Interactor
+Class FlipCoin < AllSystems::Interactor
   def outcomes
     [:heads, :tails]
   end
 
-  def run!
+  def go!
     report_tails if [true, false].sample
     report_heads
   end
@@ -103,7 +103,7 @@ Example 2
 ```rb
 class Customer
   # One of several customer actions
-  class PasswordReset < Usecase::Interactor
+  class PasswordReset < AllSystems::Interactor
     def initialize(context, id, params)
       @context = context
       @id = id
@@ -116,7 +116,7 @@ class Customer
       [:succeded, :account_unknown, :user_unknown, :not_permitted, :invalid_details]
     end
 
-    def run!
+    def go!
       report_account_unknown id, unless account
       report_user_unknown if authority.guest?
       report_not_permitted unless authority == account || authority.admin?
@@ -182,7 +182,7 @@ establish, deduce, ascertain, settle, evaluate
 
 ## Docs
 
-**#run!** `interactor.run! => raise AbstractMethodError`
+**#go!** `interactor.go! => raise AbstractMethodError`
 
 Abstract method that will always raise an error. Should be over written in for specific interactors
 
@@ -196,11 +196,11 @@ Returns the name of the class or Anonymous if class not set to constant
 
 **(private)#report** `interactor.report(outcome, *output) => terminate with result`
 
-Use within the interactor to report that an outcome state has been reached with optional output. Terminates execution of run!
+Use within the interactor to report that an outcome state has been reached with optional output. Terminates execution of go!
 
 **#outcome** `interactor.outcome => symbol`
 
-Returns the outcome of running the interactor
+Returns the outcome of goning the interactor
 
 **#outcome?(outcome)** `interactor.outcome?(outcome) => boolean`
 
@@ -208,7 +208,7 @@ Does the outcome match the predicate outcome.
 
 **#output** `interactor.output => [*output]`
 
-Returns an array of output from running the interactor
+Returns an array of output from goning the interactor
 
 **#on(:outcome)** `interactor.on(:outcome, &block) => block return value`
 
@@ -225,7 +225,7 @@ Yields output to block if outcome equal to method name, raises error if method n
 
 **#report_&lt;outcome&gt;** `interactor.report_<outcome>(*output) => terminate with result`
 
-Use within the interactor to report that an outcome state has been reached with optional output. Terminates execution of run!
+Use within the interactor to report that an outcome state has been reached with optional output. Terminates execution of go!
 
 
 ## Upcoming

@@ -1,4 +1,4 @@
-require 'usecase'
+require 'all_systems'
 require 'minitest/autorun'
 require 'minitest/reporters'
 

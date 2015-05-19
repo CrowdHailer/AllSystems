@@ -1,9 +1,9 @@
 require_relative '../test_config'
 
-module Usecase
+module AllSystems
   class InteractorOutcomeTest < MiniTest::Test
     def interactor_klass
-      @interactor_klass ||= Class.new(Usecase::Interactor) do
+      @interactor_klass ||= Class.new(AllSystems::Interactor) do
         def initialize(pass)
           @pass = pass
         end
@@ -12,7 +12,7 @@ module Usecase
           [:success, :failure]
         end
 
-        def run!
+        def go!
           report :success if @pass
           report :failure
         end
