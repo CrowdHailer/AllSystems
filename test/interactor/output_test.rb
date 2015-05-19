@@ -12,7 +12,7 @@ module AllSystems
           [:none, :one, :two, :unique]
         end
 
-        def run!
+        def go!
           case @value
           when 0
             report :none
@@ -72,7 +72,7 @@ module AllSystems
       mock.verify
     end
 
-    def test_run_is_only_executed_once
+    def test_go_is_only_executed_once
       interactor = interactor_klass.new :unique
       assert_equal interactor.output.first, interactor.output.first
     end

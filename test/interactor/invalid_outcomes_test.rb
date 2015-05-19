@@ -12,7 +12,7 @@ module AllSystems
           [:success]
         end
 
-        def run!
+        def go!
           report :success if @pass
           report :random
         end

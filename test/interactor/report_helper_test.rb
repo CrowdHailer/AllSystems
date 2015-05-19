@@ -12,7 +12,7 @@ module AllSystems
           [:success, :failure]
         end
 
-        def run!
+        def go!
           report_success :item if @pass
           report_failure
         end
@@ -38,7 +38,7 @@ module AllSystems
         []
       end
 
-      def run!
+      def go!
         report_created
       end
     end
@@ -50,7 +50,7 @@ module AllSystems
     end
 
     class Nonedefined < AllSystems::Interactor
-      def run!
+      def go!
         report_created
       end
     end
