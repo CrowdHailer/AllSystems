@@ -1,9 +1,9 @@
 require_relative '../test_config'
 
-module Usecase
+module AllSystems
   class InteractorInvalidOutcomeTest < MiniTest::Test
     def interactor_klass
-      @interactor_klass ||= Class.new(Usecase::Interactor) do
+      @interactor_klass ||= Class.new(AllSystems::Interactor) do
         def initialize(pass)
           @pass = pass
         end
@@ -21,21 +21,21 @@ module Usecase
 
     def test_cant_report_unknown_outcome
       interactor = interactor_klass.new false
-      assert_raises Usecase::UnknownOutcomeReportError do
+      assert_raises AllSystems::UnknownOutcomeReportError do
         interactor.outcome
       end
     end
 
     def test_cant_check_unknown_outcome
       interactor = interactor_klass.new true
-      assert_raises Usecase::UnknownOutcomeError do
+      assert_raises AllSystems::UnknownOutcomeError do
         interactor.outcome? :random
       end
     end
 
     def test_cant_define_callback_for_unknown_outcome
       interactor = interactor_klass.new true
-      assert_raises Usecase::UnknownOutcomeError do
+      assert_raises AllSystems::UnknownOutcomeError do
         interactor.on :random do
           flunk
         end

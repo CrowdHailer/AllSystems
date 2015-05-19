@@ -1,4 +1,4 @@
-module Usecase
+module AllSystems
   AbstractMethodError = Class.new(StandardError)
   NoOutcomeError = Class.new(StandardError)
   UnknownOutcomeReportError = Class.new(StandardError)

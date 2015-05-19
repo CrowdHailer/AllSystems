@@ -1,4 +1,4 @@
-module Usecase
+module AllSystems
   class Interactor
     def run!
       raise AbstractMethodError, "please define #{__method__} for #{name} interactor"

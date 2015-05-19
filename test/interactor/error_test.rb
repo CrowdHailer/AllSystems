@@ -1,8 +1,8 @@
 require_relative '../test_config'
 
-module Usecase
+module AllSystems
   class InteractorErrorTest < MiniTest::Test
-    NoRunInteractor = Class.new(Usecase::Interactor)
+    NoRunInteractor = Class.new(AllSystems::Interactor)
 
     def test_raises_error_for_no_run_bang_method
       interactor = NoRunInteractor.new
@@ -12,7 +12,7 @@ module Usecase
       assert_includes err.message, 'run!'
     end
 
-    NoOutcomeInteractor = Class.new(Usecase::Interactor) do
+    NoOutcomeInteractor = Class.new(AllSystems::Interactor) do
       def run! ; end
     end
 
@@ -25,7 +25,7 @@ module Usecase
     end
 
     def test_raises_correct_error_for_unnamed_interactor
-      interactor = Class.new(Usecase::Interactor).new
+      interactor = Class.new(AllSystems::Interactor).new
       err = assert_raises AbstractMethodError do
         interactor.outcome
       end
