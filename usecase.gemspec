@@ -10,7 +10,7 @@ Gem::Specification.new do |spec|
   spec.email         = ["peterhsaxton@gmail.com"]
   spec.summary       = %q{Simple usecase/interactor/service objects to encapsulate business logic}
   spec.description   = %q{An interactor encapsulates the action of specific business usecase. For example a `LogIn` or `CreatePost`. It executes this action by coordinating the interaction of other business objects in the system.}
-  spec.homepage      = ""
+  spec.homepage      = "https://github.com/CrowdHailer/AllSystems"
   spec.license       = "MIT"
 
   spec.files         = `git ls-files -z`.split("\x0")
