@@ -1,7 +1,7 @@
 module Usecase
   class Interactor
     def run!
-      raise AbstractMethodError, "please define #{__method__} for #{name}"
+      raise AbstractMethodError, "please define #{__method__} for #{name} interactor"
     end
 
     def outcomes

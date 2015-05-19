@@ -29,7 +29,7 @@ module Usecase
       err = assert_raises AbstractMethodError do
         interactor.outcome
       end
-      assert_includes err.message, 'Anonymous Interactor'
+      assert_includes err.message, 'Anonymous interactor'
     end
   end
 end
