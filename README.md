@@ -46,7 +46,7 @@ Such a simple class that a library is almost not needed. I have found its value 
 Add this line to your application's Gemfile:
 
 ```ruby
-gem 'usecase'
+gem 'all_systems'
 ```
 
 And then execute:
@@ -55,7 +55,7 @@ And then execute:
 
 Or install it yourself as:
 
-    $ gem install usecase
+    $ gem install all_systems
 
 ## Usage
 
