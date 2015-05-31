@@ -227,6 +227,44 @@ Yields output to block if outcome equal to method name, raises error if method n
 
 Use within the interactor to report that an outcome state has been reached with optional output. Terminates execution of go!
 
+## Testing
+I separate my tests on the interactor divison as much as possible. 
+
+#### Testing the domain
+These are often the nearest thing I have to integration tests. I find that making tests of the interactors that hit all parts of the domain, e.g. the database. Are much less cumbersome than trying to test all the domain logic from a web interface
+
+```rb
+context = OpenStruct.new(:current_user => admin_user, :logger => NullLogger.new)
+# Don't need to do any fill in user[password_confirmation] noise just pass the imputs as the form would have coerced them.
+form = OpenStruct.new(:password => new_password, :current_password => oldpassword)
+
+interactor = ChangePassword.new(context, admin_user.id, form)
+assert_equal :success, interactor.outcome
+assert_equal [admin_user], interactor.output
+# OR
+assert_equal [:success, admin_user], interactor.result
+```
+
+There is no need to test any of the blocks arguments which is normally more complicated than testing a return value. This is the main reason I reuse this Gem, for the assurance that the calls have been separatly tested.
+
+#### Testing the web application
+This is simply the case of stubbing out the result from the usecase then testing the returned pages/json any way you want
+
+```rb
+ChangePassword.stub :new, DummyInteractor.new(:success, admin_user) do
+  post '/change_password' # don't need any form parms 
+end
+assert_something last_response
+```
+
+To test the imput send whatever you like and then check that the form has the correct details
+```rb
+dummy_interactor = DummyInteractor.new(:success, admin_user)
+ChangePassword.stub :new, DummyInteractor.new(:success, admin_user) do
+  post '/change_password', {:user => {:password => new_password, :etc => etc}}
+end
+assert_something dummy_interactor.form
+```
 
 ## Upcoming
 8. actions on class passed to instance *possible to declare action before use*
