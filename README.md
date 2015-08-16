@@ -1,6 +1,6 @@
 # AllSystems [![Gem Version](https://badge.fury.io/rb/all_systems.svg)](http://badge.fury.io/rb/all_systems)
 
-**Simple Ruby usecases/interactors/service-object to encapsulate business logic**
+**Simple Ruby usecases/interactors/service-object to encapsulate business logic. see this [blog post](http://insights.workshop14.io/2015/08/16/introducing-interactors-to-represent-getting-stuff-done.html) for details.** 
 
 ### Well what is it?
 The three terms above are all used at various times to describe the use of a dedicated object separate to the delivery mechanism (read ApplicationController) to coordinate the calls on several domain objects (such as user models). Service object is sometimes used to describe the encapsulation of an external service that you system uses. E.g. you might have a Stripe service object, so I do not use that term. Also usecase seams to make more sense on a non technical level, so the Login usecase is what the customer does. It is achieved using the Login interactor, the Ruby object. A good starting point is this [article](https://netguru.co/blog/service-objects-in-rails-will-help) as well as the further reading listed. This [article](http://blog.codeclimate.com/blog/2012/10/17/7-ways-to-decompose-fat-activerecord-models/) helps explain there place in the landscape of objeccts beyond MVC  
