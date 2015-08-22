@@ -266,9 +266,6 @@ end
 assert_something dummy_interactor.form
 ```
 
-## Upcoming
-8. actions on class passed to instance *possible to declare action before use*
-
 ## Contributing
 
 1. Fork it ( https://github.com/[my-github-username]/usecase/fork )
